@@ -39,6 +39,7 @@ public class ch6_3_PICNIC {
                 count += findPair(isFriends, alreadyPaired, numStudents);
                 alreadyPaired[i] = false;
                 alreadyPaired[target] = false;
+            
             }
         }
         return count;
@@ -46,7 +47,7 @@ public class ch6_3_PICNIC {
     
     private static void solve(boolean[][] isFriends, int numStudents) {
         boolean[] alreadyPaired = new boolean[numStudents];
-        Arrays.fill(alreadyPaired, false);
+        //Arrays.fill(alreadyPaired, false);
         System.out.println(findPair(isFriends, alreadyPaired, numStudents));
     }
     
