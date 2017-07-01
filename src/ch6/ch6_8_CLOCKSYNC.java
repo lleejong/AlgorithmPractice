@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 public class ch6_8_CLOCKSYNC {
     
-    private static boolean[][] clockSwitch = new boolean[10][16];
+    private static final int NUM_CLOCK = 16;
+    private static final int NUM_SWITCH = 10;
+    private static boolean[][] clockSwitch = new boolean[NUM_SWITCH][NUM_CLOCK];
     
     private static void init() {
         clockSwitch[0][0] = true;
@@ -64,25 +66,62 @@ public class ch6_8_CLOCKSYNC {
         clockSwitch[9][13] = true;
     }
     
-    private static boolean check(int[] currentTime) {
-        for (int time : currentTime) {
+    private static boolean checkClock(int[] currentTime) {
+        for(int time : currentTime){
             if (time != 12)
                 return false;
         }
         return true;
     }
     
+    private static void pushSwitch(int[] currentTime, int switchNum) {
+        for (int i = 0; i < clockSwitch[switchNum].length; i++) {
+            if (clockSwitch[switchNum][i]) {
+                currentTime[i] += 3;
+                if(currentTime[i] > 12)
+                    currentTime[i] -= 12;
+            }
+        }
+    }
+    
+    
+    private static int solve(int currentSwitchNum, int[] currentTime) {
+        if (currentSwitchNum == NUM_SWITCH) {
+            if (checkClock(currentTime))
+                return 0;
+            else
+                return Integer.MAX_VALUE;
+        }
+        int result = Integer.MAX_VALUE;
+        for (int i = 0; i < 4; i++) {
+            if (checkClock(currentTime)) {
+                return i;
+            } else {
+                if (i != 0) {
+                    pushSwitch(currentTime, currentSwitchNum);
+                }
+                result = Math.min(result, i + solve(currentSwitchNum+ 1, currentTime.clone()));
+            }
+        }
+        return result;
+    }
+    
     public static void main(String args[]) {
         init();
         Scanner scanner = new Scanner(System.in);
         int task = scanner.nextInt();
-        int[][] currentTime = new int[30][16];
+        int[][] currentTime = new int[30][NUM_CLOCK];
         for (int i = 0; i < task; i++) {
             for (int j = 0; j < 15; j++)
                 currentTime[i][j] = scanner.nextInt();
         }
         
-        for (int i = 0; i < task; i++)
-            solve(currentTime[i]);
+        for (int i = 0; i < task; i++) {
+            int result = solve(0, currentTime[i]);
+            if (result == Integer.MAX_VALUE)
+                System.out.println(-1);
+            else
+                System.out.println(result);
+        }
     }
 }
