@@ -11,6 +11,9 @@ public class ch7_3_QUADTREE {
    
     
     private static String solve(String input){
+        if(cursor >= input.length())
+            return "";
+        
         StringBuilder result = new StringBuilder("");
         char ch = input.charAt(cursor++);
         result.append(ch);
